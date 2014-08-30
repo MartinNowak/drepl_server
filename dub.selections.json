@@ -1,0 +1,11 @@
+{
+	"fileVersion": 1,
+	"versions": {
+		"vibe-d": "~master",
+		"libevent": "~master",
+		"openssl": "~master",
+		"libev": "~master",
+		"linenoise": "~master",
+		"drepl": "0.1.0+commit.44.g93f02cc"
+	}
+}

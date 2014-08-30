@@ -1,0 +1,32 @@
+{
+    "name": "drepl_server",
+    "description": "A simple vibe.d server application.",
+    "copyright": "Copyright © 2014, dawg",
+    "authors": ["dawg"],
+    "lflags-linux-dmd": ["-lselinux"],
+    "sourcePaths": [],
+    "configurations": [
+	{
+            "name": "server",
+            "targetType": "executable",
+            "targetName": "drepl_server",
+            "excludedSourceFiles": ["src/sandbox.d"],
+            "versions": ["VibeDefaultMain"],
+            "dependencies": {
+                "vibe-d": "~>0.7.20",
+            },
+        },
+	{
+            "name": "sandbox",
+            "targetType": "executable",
+            "targetName": "drepl_sandbox",
+            "excludedSourceFiles": ["src/server.d"],
+            "dependencies": {
+                "drepl": "~>0.1.0",
+            },
+        },
+    ],
+    "subConfigurations": {
+        "drepl": "library",
+    },
+}
