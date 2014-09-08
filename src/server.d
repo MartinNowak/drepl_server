@@ -72,7 +72,12 @@ void sendError(WebSocket sock, string error)
 
 void runSession(scope WebSocket sock)
 {
-    auto p = sandBox();
+    immutable id = allocSession();
+    if (id == size_t.max)
+        return sock.sendError("Too many active users, try again later.");
+    scope (exit) freeSession(id);
+
+    auto p = sandBox(id);
     fcntl(p.stdout.fileno, F_SETFL, O_NONBLOCK);
 
     scope readEvt = createFileDescriptorEvent(p.stdout.fileno, FileDescriptorEvent.Trigger.read);
@@ -124,6 +129,24 @@ void runSession(scope WebSocket sock)
         return sock.sendError("Connection closed due to inactivity (5 minutes).");
 }
 
+__gshared size_t[1024 / (8 * size_t.sizeof)] sessions;
+
+private size_t allocSession()
+{
+    import std.random, core.bitop : bts;
+
+    foreach (id; iota(0, 8 * size_t.sizeof * sessions.length).randomCover())
+        if (!bts(sessions.ptr, id)) return id;
+    return size_t.max;
+}
+
+private void freeSession(size_t id)
+{
+    import core.bitop : btc;
+
+    btc(sessions.ptr, id) || assert(0);
+}
+
 //------------------------------------------------------------------------------
 // Sandbox
 
@@ -141,7 +164,9 @@ string mkdtemp(string prefix)
 // should be in core.sys.linux.selinux.selinux
 extern(C) void setfscreatecon(const char*);
 
-auto sandBox()
+auto sandBox(size_t id)
+in { assert(id >= 0 && id < 1024 ^^ 2); }
+body
 {
     import core.runtime : Runtime;
 
@@ -162,8 +187,8 @@ auto sandBox()
         alias _p this;
     }
 
-    // TODO: generate and lock MCS/MCL
-    setfscreatecon("unconfined_u:object_r:sandbox_file_t:s0:c1023");
+    setfscreatecon("unconfined_u:object_r:sandbox_file_t:s0:c%s,c%s"
+                   .format(id / 1024, id % 1024).toStringz());
     auto tmpDir = mkdtemp(".sandbox_tmp_");
     auto homeDir = mkdtemp(".sandbox_home_");
     setfscreatecon(null);
@@ -172,7 +197,8 @@ auto sandBox()
     mkdirRecurse(path.dirName);
     copy(sandbox, path);
     path.setAttributes(sandbox.getAttributes);
-    auto p = pipeProcess(["seunshare", "-Z", "unconfined_u:unconfined_r:sandbox_t:s0:c1023",
+    auto p = pipeProcess(["seunshare", "-Z", "unconfined_u:unconfined_r:sandbox_t:s0:c%s,c%s"
+                          .format(id / 1024, id % 1024),
                           "-t", tmpDir, "-h", homeDir, "--", sandbox]);
     return SandBox(tmpDir, homeDir, p);
 }
