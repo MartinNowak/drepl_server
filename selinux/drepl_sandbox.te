@@ -1,0 +1,18 @@
+policy_module(drepl_sandbox, 1.0.0)
+
+########################################
+#
+# Declarations
+#
+
+sandbox_domain_template(drepl_sandbox)
+
+########################################
+#
+# drepl_sandbox local policy
+#
+
+sysnet_dns_name_resolve(drepl_sandbox_t)
+
+allow drepl_sandbox_t self:tcp_socket create_stream_socket_perms;
+corenet_tcp_connect_http_port(drepl_sandbox_t)
