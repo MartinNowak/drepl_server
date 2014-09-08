@@ -3,7 +3,13 @@ html
   head
     title D REPL
     link(rel='shortcut icon', href='/favicon.ico')
-    style!= import("style.min.css")
+    link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css')
+    - debug
+      link(rel='stylesheet', href='/jquery.terminal.css')
+      link(rel='stylesheet', href='/drepl.css')
+    - else
+      link(rel='stylesheet', href='/jquery.terminal.min.css')
+      link(rel='stylesheet', href='/drepl.min.css')
   body
     .container
       .panel.panel-info
@@ -12,4 +18,10 @@ html
           small Try to type an expression, a statement or a declaration.
         .panel-body
           #terminal.panel-body
-  script!= import("console.min.js")
+  script(src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js")
+  - debug
+    script(src="/jquery.terminal.js")
+    script(src="/drepl.js")
+  - else
+    script(src="/jquery.terminal.min.js")
+    script(src="/drepl.min.js")
