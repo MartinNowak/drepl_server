@@ -58,7 +58,9 @@ shared static this()
 
 void drepl(HTTPServerRequest req, HTTPServerResponse res)
 {
-    res.render!"drepl.dt"();
+    import vibe.textfilter.markdown : filterMarkdown;
+    auto content = readText("welcome.md").filterMarkdown(MarkdownFlags.forumDefault);
+    res.render!("drepl.dt", content)();
 }
 
 void sendError(WebSocket sock, string error)

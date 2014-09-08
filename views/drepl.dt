@@ -4,6 +4,7 @@ html
     title D REPL
     link(rel='shortcut icon', href='/favicon.ico')
     link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css')
+    link(rel='stylesheet', href='//code.cdn.mozilla.net/fonts/fira.css')
     - debug
       link(rel='stylesheet', href='/jquery.terminal.css')
       link(rel='stylesheet', href='/drepl.css')
@@ -11,13 +12,23 @@ html
       link(rel='stylesheet', href='/jquery.terminal.min.css')
       link(rel='stylesheet', href='/drepl.min.css')
   body
-    .container
-      .panel.panel-info
-        .panel-heading
-          h3.text-center D REPL
-          small Try to type an expression, a statement or a declaration.
-        .panel-body
-          #terminal.panel-body
+    .container-fluid
+      .row.header
+        .col-md-12
+          img(src="d-logo.svg")
+          h3(style="display: inline") REPL
+      .row.content
+        .col-xs-12.col-md-6
+          #terminal
+        .col-xs-12.col-md-6
+          #guide!= content
+      .row.footer
+        a(href="http://github.com/MartinNowak/drepl_server") D REPL
+        | is built with
+        a(href="http://dlang.org") dmd,
+        a(href="http://vibed.org") vibe.d
+        | and
+        a(href="https://github.com/chrisdone/jquery-console") jquery-console
   script(src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js")
   - debug
     script(src="/jquery.terminal.js")
