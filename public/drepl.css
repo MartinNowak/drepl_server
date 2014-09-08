@@ -1,0 +1,52 @@
+body {
+    background: #f7f7f7;
+}
+
+/* Console */
+.row.content {
+    background: #fff;
+    font-size: 15px;
+    padding: 2em 0 2em 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+#console {
+    font-family: 'Fira Mono', monospace;
+}
+
+#guide h1,
+#guide h2,
+#guide h3 {
+    margin-top: 0;
+}
+
+.jquery-console-focus .jquery-console-cursor {
+    background:#aaa;
+    color:#eee
+    font-weight:bold
+}
+.jquery-console-inner {
+    height: 20em;
+    overflow: auto;
+    word-wrap: break-word;
+}
+.jquery-console-prompt-label {
+    color: #8f4e8b;
+    font-weight: bold;
+}
+.jquery-console-error {
+    color: #8f4e8b;
+}
+.jquery-console-value {
+    color: #2e659c;
+}
+.jquery-console-stdout {
+    color: #216f42;
+}
+.jquery-console-type {
+    color: #777;
+}
+.jquery-console-welcome {
+    color: #888;
+    margin-bottom: 0.5em;
+}

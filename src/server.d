@@ -18,8 +18,8 @@ shared static this()
     auto router = new URLRouter;
     router
         .get("/", &drepl)
-        .get("/favicon.ico", serveStaticFile("public/favicon.d"))
         .get("/ws/dmd", handleWebSockets(&runSession))
+        .get("/*", serveStaticFiles("public"))
         ;
 
     if (sslCert.empty)
@@ -58,7 +58,10 @@ shared static this()
 
 void drepl(HTTPServerRequest req, HTTPServerResponse res)
 {
-    res.render!"drepl.dt"();
+    import std.file : readText;
+    auto content = "welcome.md".readText();
+    content = vibe.textfilter.markdown.filterMarkdown(content, MarkdownFlags.forumDefault);
+    res.render!("drepl.dt", content)();
 }
 
 void sendError(WebSocket sock, string error)
