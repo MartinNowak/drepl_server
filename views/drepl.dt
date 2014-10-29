@@ -10,23 +10,27 @@ html
     - else
       link(rel='stylesheet', href='/drepl.min.css')
   body
+    nav.navbar.navbar-default.navbar-static-top.header
+      .container
+        .row.header
+          .col-md-12
+            img(src="d-logo.svg")
+            h3(style="display: inline") REPL
     .container-fluid
-      .row.header
-        .col-md-12
-          img(src="d-logo.svg")
-          h3(style="display: inline") REPL
       .row.content
         .col-xs-12.col-md-6
           #console
         .col-xs-12.col-md-6
           #guide!= content
-      .row.footer
-        a(href="http://github.com/MartinNowak/drepl_server") D REPL
-        | is built with
-        a(href="http://dlang.org") dmd,
-        a(href="http://vibed.org") vibe.d
-        | and
-        a(href="https://github.com/chrisdone/jquery-console") jquery-console
+    .footer
+      .container
+        .muted.credit
+          a(href="http://github.com/MartinNowak/drepl_server") D REPL
+          | is built with
+          a(href="http://dlang.org") dmd,
+          a(href="http://vibed.org") vibe.d
+          | and
+          a(href="https://github.com/chrisdone/jquery-console") jquery-console
   script(src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js")
   - debug
     script(src="/jquery.console.js")

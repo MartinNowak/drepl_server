@@ -3,48 +3,61 @@ $(document).ready(function() {
         (location.port ? ':'+location.port: '')+'/ws/dmd';
     var conn = new WebSocket(ws_url);
 
-    var writeln;
+    var _writeln;
+    function writeln(msg, class_) {
+        if (_writeln)
+            _writeln(msg, class_);
+    }
 
     var controller = $('#console').console({
         promptLabel: 'D> ',
+        continuedPromptLabel: ' | ',
         commandHandle: function(line, cb) {
-            writeln = cb
+            _writeln = cb;
+            console.log(line);
             conn.send(line);
-            return true;//[{msg: line, className: 'jquery-console-message-value'}];
         },
         autofocus: true,
         animateScroll: true,
-        promptHistory: true,
+        promptHistory: true
     });
 
-    var disabled = true;
-    // controller.disableInput();
+    $(".jquery-console-typer").prop("disabled", true);
 
     conn.onopen = function (e) {
-        // controller.enableInput();
-    }
+        $(".jquery-console-typer").prop("disabled", false);
+    };
 
     conn.onmessage = function (e) {
-        var resp = JSON.parse(e.data), prompt = 'D> ';
+        var resp = JSON.parse(e.data);
+        console.log(resp.state);
         switch (resp.state)
         {
-        case 'incomplete': prompt = ' |'; break;
+        case 'incomplete':
+            if (controller.continuedPrompt) break;
+            controller.continuedPrompt = true;
+            writeln("");
+            break;
         case 'success':
         case 'error':
+            controller.continuedPrompt = false;
             for (var i = 0; i < resp.stdout.length; ++i)
-                writeln("=> "+resp.stdout[i], 'success');
+                writeln([{msg: "=> "+resp.stdout[i], className: 'jquery-console-message-success'}]);
             for (var i = 0; i < resp.stderr.length; ++i)
-                writeln("=> "+resp.stderr[i], 'danger');
+                writeln([{msg: "=> "+resp.stderr[i], className: 'jquery-console-message-error'}]);
+            if (resp.stdout.length + resp.stderr.length == 0)
+                writeln("");
             break;
         }
-        controller.promptLabel = prompt;
-    }
+    };
 
     conn.onerror = function (e) {
-        writeln('danger', 'A WebSocket error occured \''+e.data+'\'.');
+        controller.notice('A WebSocket error occured \''+e.data+'\'.', 'prompt');
+        $(".jquery-console-typer").prop("disabled", true);
     };
 
     conn.onclose = function (ce) {
-        writeln('warning', 'Lost the connection to the server.');
+        controller.notice('Lost the connection to the server.', 'prompt');
+        $(".jquery-console-typer").prop("disabled", true);
     };
 });

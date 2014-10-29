@@ -1,14 +1,36 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
 body {
-    background: #f7f7f7;
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
 }
 
+.footer, .header {
+    background-color: #f5f5f5;
+}
+
+.credit { margin: 20px 0; }
+.muted { color: #999999; }
+
 /* Console */
+.row.header {
+    font-weight: bold;
+}
 .row.content {
     background: #fff;
     font-size: 15px;
     padding: 2em 0 2em 0;
-    border-top: 1px solid #eee;
-    border-bottom: 1px solid #eee;
 }
 #console {
     font-family: 'Fira Mono', monospace;
@@ -34,19 +56,9 @@ body {
     color: #8f4e8b;
     font-weight: bold;
 }
-.jquery-console-error {
-    color: #8f4e8b;
+.jquery-console-message-success {
+    color: green;
 }
-.jquery-console-value {
-    color: #2e659c;
-}
-.jquery-console-stdout {
-    color: #216f42;
-}
-.jquery-console-type {
-    color: #777;
-}
-.jquery-console-welcome {
-    color: #888;
-    margin-bottom: 0.5em;
+.jquery-console-message-error {
+    color: red;
 }
